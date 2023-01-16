@@ -21,16 +21,17 @@ jobs:
     - name: Install Dependencies
       run: |
           sudo apt install build-essential -y
-          sudo apt-get install git libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build -y
-          sudo apt-get install libaio-dev libbluetooth-dev libcapstone-dev libbrlapi-dev libbz2-dev -y
-          sudo apt-get install libcap-ng-dev libcurl4-gnutls-dev libgtk-3-dev -y
-          sudo apt-get install libibverbs-dev libjpeg8-dev libncurses5-dev libnuma-dev -y
-          sudo apt-get install librbd-dev librdmacm-dev -y
-          sudo apt-get install libsasl2-dev libsdl2-dev libseccomp-dev libsnappy-dev libssh-dev -y
-          sudo apt-get install libvde-dev libvdeplug-dev libvte-2.91-dev libxen-dev liblzo2-dev -y
-          sudo apt-get install valgrind xfslibs-dev -y
-          sudo apt-get install libusb-dev -y
-          sudo apt-get install libusbredirparser-dev -y
+          sudo apt install git libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build -y
+          sudo apt install libaio-dev libbluetooth-dev libcapstone-dev libbrlapi-dev libbz2-dev -y
+          sudo apt install libcap-ng-dev libcurl4-gnutls-dev libgtk-3-dev -y
+          sudo apt install libibverbs-dev libjpeg8-dev libncurses5-dev libnuma-dev -y
+          sudo apt install librbd-dev librdmacm-dev -y
+          sudo apt install libsasl2-dev libsdl2-dev libseccomp-dev libsnappy-dev libssh-dev -y
+          sudo apt install libvde-dev libvdeplug-dev libvte-2.91-dev libxen-dev liblzo2-dev -y
+          sudo apt install valgrind xfslibs-dev -y
+          sudo apt install libusb-dev -y
+          sudo apt install libusbredirparser-dev -y
+          sudo apt install libspice-protocol-dev libspice-server-dev -y
 
     - name: Configure
       if: steps.cache-cross.outputs.cache-hit != 'true'
