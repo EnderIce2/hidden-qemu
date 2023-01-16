@@ -28,6 +28,7 @@
 #include "hw/scsi/scsi.h"
 #include "sysemu/block-backend.h"
 #include "trace.h"
+#include "../../HIDDEN_QEMU.h"
 
 #define ATAPI_SECTOR_BITS (2 + BDRV_SECTOR_BITS)
 #define ATAPI_SECTOR_SIZE (1 << ATAPI_SECTOR_BITS)
