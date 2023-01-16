@@ -16,7 +16,7 @@
 #include "virtio-scsi.h"
 #include "s390-time.h"
 #include "helper.h"
-#include "../../../HIDDEN_QEMU.h"
+#include "../../HIDDEN_QEMU.h"
 
 static ScsiDevice default_scsi_device;
 static VirtioScsiCmdReq req;

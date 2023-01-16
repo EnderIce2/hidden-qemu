@@ -58,7 +58,7 @@
 #include "multiboot.h"
 #include "elf.h"
 #include "standard-headers/asm-x86/bootparam.h"
-#include "../../../HIDDEN_QEMU.h"
+#include "../../HIDDEN_QEMU.h"
 #include CONFIG_DEVICES
 #include "kvm/kvm_i386.h"
 

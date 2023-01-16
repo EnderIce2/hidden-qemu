@@ -42,7 +42,7 @@
 #include "qemu/cutils.h"
 #include "trace.h"
 #include "qom/object.h"
-#include "../../../HIDDEN_QEMU.h"
+#include "../../HIDDEN_QEMU.h"
 
 #ifdef __linux
 #include <scsi/sg.h>

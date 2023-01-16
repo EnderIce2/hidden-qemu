@@ -28,7 +28,7 @@
 #include "qemu/module.h"
 #include "qemu/bswap.h"
 #include "qemu/error-report.h"
-#include "../../HIDDEN_QEMU.h"
+#include "../HIDDEN_QEMU.h"
 
 /**************************************************************/
 

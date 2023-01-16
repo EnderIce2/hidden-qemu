@@ -44,7 +44,7 @@
 #include "sysemu/tpm.h"
 #include "sysemu/block-backend.h"
 #include "hw/block/flash.h"
-#include "../../../HIDDEN_QEMU.h"
+#include "../../HIDDEN_QEMU.h"
 
 static void virt_flash_create(LoongArchMachineState *lams)
 {

@@ -34,7 +34,7 @@
 #include "qemu/module.h"
 #include "desc.h"
 #include "qom/object.h"
-#include "../../../HIDDEN_QEMU.h"
+#include "../../HIDDEN_QEMU.h"
 
 /* Interface requests */
 #define WACOM_GET_REPORT    0x2101

@@ -42,7 +42,7 @@
 #include "sysemu/runstate.h"
 #include "hw/ide/internal.h"
 #include "trace.h"
-#include "../../../HIDDEN_QEMU.h"
+#include "../../HIDDEN_QEMU.h"
 
 /* These values were based on a Seagate ST3500418AS but have been modified
    to make more sense in QEMU */
