@@ -34,7 +34,7 @@ jobs:
 
     - name: Configure
       if: steps.cache-cross.outputs.cache-hit != 'true'
-      run: bash ./configure --target-list=x86_64-softmmu --prefix="$(pwd)/_BUILD" --enable-gtk
+      run: bash ./configure --target-list=x86_64-softmmu --prefix="$(pwd)/_BUILD" --enable-gtk --enable-spice --enable-tpm --enable-kvm
 
     - name: Build
       run: make -j$(nproc)
