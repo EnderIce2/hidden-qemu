@@ -1,0 +1,44 @@
+name: QEMU
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  buildcompiler:
+    name: Build QEMU
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Update System
+      run: sudo apt-get update
+
+    - name: Install GCC Dependencies
+      run: |
+          sudo apt install build-essential -y
+          sudo apt-get install git libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build -y
+          sudo apt-get install git-email -y
+          sudo apt-get install libaio-dev libbluetooth-dev libcapstone-dev libbrlapi-dev libbz2-dev -y
+          sudo apt-get install libcap-ng-dev libcurl4-gnutls-dev libgtk-3-dev -y
+          sudo apt-get install libibverbs-dev libjpeg8-dev libncurses5-dev libnuma-dev -y
+          sudo apt-get install librbd-dev librdmacm-dev -y
+          sudo apt-get install libsasl2-dev libsdl2-dev libseccomp-dev libsnappy-dev libssh-dev -y
+          sudo apt-get install libvde-dev libvdeplug-dev libvte-2.91-dev libxen-dev liblzo2-dev -y
+          sudo apt-get install valgrind xfslibs-dev -y
+
+    - name: Clone All
+      if: steps.cache-cross.outputs.cache-hit != 'true'
+      run: |
+          bash ./configure --target-list=x86_64-softmmu --prefix="$(pwd)/_BUILD" --enable-gtk
+	        make -j$(nproc) && make install
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: build
+        path: _BUILD
