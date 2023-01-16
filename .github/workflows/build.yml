@@ -29,6 +29,8 @@ jobs:
           sudo apt-get install libsasl2-dev libsdl2-dev libseccomp-dev libsnappy-dev libssh-dev -y
           sudo apt-get install libvde-dev libvdeplug-dev libvte-2.91-dev libxen-dev liblzo2-dev -y
           sudo apt-get install valgrind xfslibs-dev -y
+          sudo apt-get install libusb-dev -y
+          sudo apt-get install libusbredirparser-dev -y
 
     - name: Configure
       if: steps.cache-cross.outputs.cache-hit != 'true'
