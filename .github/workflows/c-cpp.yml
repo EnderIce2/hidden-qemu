@@ -35,7 +35,7 @@ jobs:
       if: steps.cache-cross.outputs.cache-hit != 'true'
       run: |
           bash ./configure --target-list=x86_64-softmmu --prefix="$(pwd)/_BUILD" --enable-gtk
-	        make -j$(nproc) && make install
+          make -j$(nproc) && make install
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3.1.0
