@@ -79,6 +79,7 @@
 #include "hw/virtio/virtio-iommu.h"
 #include "hw/char/pl011.h"
 #include "qemu/guest-random.h"
+#include "../../../HIDDEN_QEMU.h"
 
 #define DEFINE_VIRT_MACHINE_LATEST(major, minor, latest) \
     static void virt_##major##_##minor##_class_init(ObjectClass *oc, \
@@ -3194,8 +3195,8 @@ static void virt_instance_init(Object *obj)
 
     virt_flash_create(vms);
 
-    vms->oem_id = g_strndup(ACPI_BUILD_APPNAME6, 6);
-    vms->oem_table_id = g_strndup(ACPI_BUILD_APPNAME8, 8);
+    vms->oem_id = g_strndup(QEMU_HIDDEN_BOCHS_ACPI_APPNAME6, 6);
+    vms->oem_table_id = g_strndup(QEMU_HIDDEN_BOCHS_ACPI_APPNAME8, 8);
 }
 
 static const TypeInfo virt_machine_info = {

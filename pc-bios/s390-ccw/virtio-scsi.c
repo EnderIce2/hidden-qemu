@@ -16,6 +16,7 @@
 #include "virtio-scsi.h"
 #include "s390-time.h"
 #include "helper.h"
+#include "../../../HIDDEN_QEMU.h"
 
 static ScsiDevice default_scsi_device;
 static VirtioScsiCmdReq req;
@@ -308,7 +309,7 @@ static bool virtio_scsi_inquiry_response_is_cdrom(void *data)
     }
 
     for (i = 0; i < sizeof(response->prod_id); i++) {
-        if (response->prod_id[i] != QEMU_CDROM_SIGNATURE[i]) {
+        if (response->prod_id[i] != HIDDEN_QEMU_CDROM_SIGNATURE[i]) {
             return false;
         }
     }

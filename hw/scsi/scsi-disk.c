@@ -42,6 +42,7 @@
 #include "qemu/cutils.h"
 #include "trace.h"
 #include "qom/object.h"
+#include "../../../HIDDEN_QEMU.h"
 
 #ifdef __linux
 #include <scsi/sg.h>
@@ -2475,7 +2476,7 @@ static void scsi_realize(SCSIDevice *dev, Error **errp)
         s->version = g_strdup(qemu_hw_version());
     }
     if (!s->vendor) {
-        s->vendor = g_strdup("QEMU");
+        s->vendor = g_strdup(QEMU_HIDDEN_SCSI_VENDOR);
     }
     if (!s->device_id) {
         if (s->serial) {
@@ -2530,7 +2531,7 @@ static void scsi_hd_realize(SCSIDevice *dev, Error **errp)
     s->qdev.blocksize = s->qdev.conf.logical_block_size;
     s->qdev.type = TYPE_DISK;
     if (!s->product) {
-        s->product = g_strdup("QEMU HARDDISK");
+        s->product = g_strdup(QEMU_HIDDEN_DVD_SCSI);
     }
     scsi_realize(&s->qdev, errp);
 out:
@@ -2564,7 +2565,7 @@ static void scsi_cd_realize(SCSIDevice *dev, Error **errp)
     s->qdev.type = TYPE_ROM;
     s->features |= 1 << SCSI_DISK_F_REMOVABLE;
     if (!s->product) {
-        s->product = g_strdup("QEMU CD-ROM");
+        s->product = g_strdup(QEMU_HIDDEN_SCSI_CDROM);
     }
     scsi_realize(&s->qdev, errp);
     aio_context_release(ctx);
@@ -3194,7 +3195,7 @@ static void scsi_cd_class_initfn(ObjectClass *klass, void *data)
     sc->realize      = scsi_cd_realize;
     sc->alloc_req    = scsi_new_request;
     sc->unit_attention_reported = scsi_disk_unit_attention_reported;
-    dc->desc = "virtual SCSI CD-ROM";
+    dc->desc = QEMU_HIDDEN_SCSI_DESC;
     device_class_set_props(dc, scsi_cd_properties);
     dc->vmsd  = &vmstate_scsi_disk_state;
 }

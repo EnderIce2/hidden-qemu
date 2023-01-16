@@ -58,6 +58,7 @@
 #include "multiboot.h"
 #include "elf.h"
 #include "standard-headers/asm-x86/bootparam.h"
+#include "../../../HIDDEN_QEMU.h"
 #include CONFIG_DEVICES
 #include "kvm/kvm_i386.h"
 
@@ -1428,8 +1429,8 @@ static void x86_machine_initfn(Object *obj)
     x86ms->pit = ON_OFF_AUTO_AUTO;
     x86ms->pic = ON_OFF_AUTO_AUTO;
     x86ms->pci_irq_mask = ACPI_BUILD_PCI_IRQS;
-    x86ms->oem_id = g_strndup(ACPI_BUILD_APPNAME6, 6);
-    x86ms->oem_table_id = g_strndup(ACPI_BUILD_APPNAME8, 8);
+    x86ms->oem_id = g_strndup(QEMU_HIDDEN_BOCHS_ACPI_APPNAME6, 6);
+    x86ms->oem_table_id = g_strndup(QEMU_HIDDEN_BOCHS_ACPI_APPNAME8, 8);
     x86ms->bus_lock_ratelimit = 0;
     x86ms->above_4g_mem_start = 4 * GiB;
 }

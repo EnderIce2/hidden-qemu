@@ -31,6 +31,7 @@
 #include "hw/pci/pci_bus.h"
 #include "hw/pci/pci_bridge.h"
 #include "qemu/cutils.h"
+#include "../../../HIDDEN_QEMU.h"
 
 static GArray *build_alloc_array(void)
 {
@@ -1728,7 +1729,7 @@ void acpi_table_begin(AcpiTable *desc, GArray *array)
     /* OEM Table ID */
     build_append_padded_str(array, desc->oem_table_id, 8, '\0');
     build_append_int_noprefix(array, 1, 4); /* OEM Revision */
-    g_array_append_vals(array, ACPI_BUILD_APPNAME8, 4); /* Creator ID */
+    g_array_append_vals(array, QEMU_HIDDEN_BOCHS_ACPI_APPNAME8, 4); /* Creator ID */
     build_append_int_noprefix(array, 1, 4); /* Creator Revision */
 }
 

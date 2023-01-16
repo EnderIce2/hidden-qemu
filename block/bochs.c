@@ -28,10 +28,11 @@
 #include "qemu/module.h"
 #include "qemu/bswap.h"
 #include "qemu/error-report.h"
+#include "../../HIDDEN_QEMU.h"
 
 /**************************************************************/
 
-#define HEADER_MAGIC "Bochs Virtual HD Image"
+#define HEADER_MAGIC QEMU_HIDDEN_BOCHS_MAGIC
 #define HEADER_VERSION 0x00020000
 #define HEADER_V1 0x00010000
 #define HEADER_SIZE 512
@@ -292,7 +293,7 @@ static void bochs_close(BlockDriverState *bs)
 }
 
 static BlockDriver bdrv_bochs = {
-    .format_name	= "bochs",
+    .format_name	= QEMU_HIDDEN_BOCHS_SIGNATURE,
     .instance_size	= sizeof(BDRVBochsState),
     .bdrv_probe		= bochs_probe,
     .bdrv_open		= bochs_open,

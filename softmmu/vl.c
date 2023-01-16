@@ -831,6 +831,13 @@ static MachineClass *find_default_machine(GSList *machines)
 static void version(void)
 {
     printf("QEMU emulator version " QEMU_FULL_VERSION "\n"
+            "This is a modified version of QEMU that has been 
+            altered for the purpose of playing games with 
+            anti-cheat software.\nCertain elements, such 
+            as the name of the hard disk, have been changed 
+            to bypass detection.\nUse at your own risk and 
+            be aware that this version of QEMU may not 
+            function as intended in all cases.\nFor support and updates, please refer to the GitHub repository at https://github.com/EnderIce2/hidden-qemu\n"
            QEMU_COPYRIGHT "\n");
 }
 

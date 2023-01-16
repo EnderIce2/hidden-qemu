@@ -44,6 +44,7 @@
 #include "sysemu/tpm.h"
 #include "sysemu/block-backend.h"
 #include "hw/block/flash.h"
+#include "../../../HIDDEN_QEMU.h"
 
 static void virt_flash_create(LoongArchMachineState *lams)
 {
@@ -902,8 +903,8 @@ static void loongarch_machine_initfn(Object *obj)
     LoongArchMachineState *lams = LOONGARCH_MACHINE(obj);
 
     lams->acpi = ON_OFF_AUTO_AUTO;
-    lams->oem_id = g_strndup(ACPI_BUILD_APPNAME6, 6);
-    lams->oem_table_id = g_strndup(ACPI_BUILD_APPNAME8, 8);
+    lams->oem_id = g_strndup(QEMU_HIDDEN_BOCHS_ACPI_APPNAME6, 6);
+    lams->oem_table_id = g_strndup(QEMU_HIDDEN_BOCHS_ACPI_APPNAME8, 8);
     virt_flash_create(lams);
 }
 
