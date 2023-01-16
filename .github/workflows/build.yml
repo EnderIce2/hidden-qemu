@@ -18,7 +18,7 @@ jobs:
     - name: Update System
       run: sudo apt-get update
 
-    - name: Install GCC Dependencies
+    - name: Install Dependencies
       run: |
           sudo apt install build-essential -y
           sudo apt-get install git libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build -y
@@ -30,11 +30,15 @@ jobs:
           sudo apt-get install libvde-dev libvdeplug-dev libvte-2.91-dev libxen-dev liblzo2-dev -y
           sudo apt-get install valgrind xfslibs-dev -y
 
-    - name: Clone All
+    - name: Configure
       if: steps.cache-cross.outputs.cache-hit != 'true'
-      run: |
-          bash ./configure --target-list=x86_64-softmmu --prefix="$(pwd)/_BUILD" --enable-gtk
-          make -j$(nproc) && make install
+      run: bash ./configure --target-list=x86_64-softmmu --prefix="$(pwd)/_BUILD" --enable-gtk
+
+    - name: Build
+      run: make -j$(nproc)
+
+    - name: Install
+      run: make install
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3.1.0
