@@ -7,8 +7,6 @@
 */
 /* "KVMKVMKVM" */
 #define QEMU_HIDDEN_CPU_VENDOR "AuthenticAMD"
-/* "KVMKVMKVM\0\0\0" */
-#define QEMU_HIDDEN_CPU_SIGNATURE "AuthenticAMD"
 
 /* "QEMU HARDDISK" */
 #define QEMU_HIDDEN_HARDDISK_IDE "Generic IDE Hard Disk"

@@ -1800,21 +1800,6 @@ int kvm_arch_init_vcpu(CPUState *cs)
         has_msr_hv_hypercall = true;
     }
 
-    if (cpu->expose_kvm) {
-        memcpy(signature, QEMU_HIDDEN_CPU_SIGNATURE, 12);
-        c = &cpuid_data.entries[cpuid_i++];
-        c->function = KVM_CPUID_SIGNATURE | kvm_base;
-        c->eax = KVM_CPUID_FEATURES | kvm_base;
-        c->ebx = signature[0];
-        c->ecx = signature[1];
-        c->edx = signature[2];
-
-        c = &cpuid_data.entries[cpuid_i++];
-        c->function = KVM_CPUID_FEATURES | kvm_base;
-        c->eax = env->features[FEAT_KVM];
-        c->edx = env->features[FEAT_KVM_HINTS];
-    }
-
     cpu_x86_cpuid(env, 0, 0, &limit, &unused, &unused, &unused);
 
     if (cpu->kvm_pv_enforce_cpuid) {
@@ -2117,24 +2102,6 @@ int kvm_arch_init_vcpu(CPUState *cs)
                 return r;
             }
         }
-    }
-
-    if (cpu->vmware_cpuid_freq
-        /* Guests depend on 0x40000000 to detect this feature, so only expose
-         * it if KVM exposes leaf 0x40000000. (Conflicts with Hyper-V) */
-        && cpu->expose_kvm
-        && kvm_base == KVM_CPUID_SIGNATURE
-        /* TSC clock must be stable and known for this feature. */
-        && tsc_is_stable_and_known(env)) {
-
-        c = &cpuid_data.entries[cpuid_i++];
-        c->function = KVM_CPUID_SIGNATURE | 0x10;
-        c->eax = env->tsc_khz;
-        c->ebx = env->apic_bus_freq / 1000; /* Hz to KHz */
-        c->ecx = c->edx = 0;
-
-        c = cpuid_find_entry(&cpuid_data.cpuid, kvm_base, 0);
-        c->eax = MAX(c->eax, KVM_CPUID_SIGNATURE | 0x10);
     }
 
     cpuid_data.cpuid.nent = cpuid_i;

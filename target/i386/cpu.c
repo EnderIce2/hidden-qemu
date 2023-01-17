@@ -619,14 +619,14 @@ void x86_cpu_vendor_words2str(char *dst, uint32_t vendor1,
           /* partly implemented:
           CPUID_MTRR, CPUID_MCA, CPUID_CLFLUSH (needed for Win64) */
           /* missing:
-          CPUID_VME, CPUID_DTS, CPUID_SS, CPUID_HT, CPUID_TM, CPUID_PBE */
+          CPUID_VME, CPUID_DTS, CPUID_SS, CPUID_HT, CPUID_PBE */
 #define TCG_EXT_FEATURES (CPUID_EXT_SSE3 | CPUID_EXT_PCLMULQDQ | \
           CPUID_EXT_MONITOR | CPUID_EXT_SSSE3 | CPUID_EXT_CX16 | \
           CPUID_EXT_SSE41 | CPUID_EXT_SSE42 | CPUID_EXT_POPCNT | \
           CPUID_EXT_XSAVE | /* CPUID_EXT_OSXSAVE is dynamic */   \
           CPUID_EXT_MOVBE | CPUID_EXT_AES | CPUID_EXT_HYPERVISOR | \
           CPUID_EXT_RDRAND | CPUID_EXT_AVX | CPUID_EXT_F16C | \
-          CPUID_EXT_FMA)
+          CPUID_EXT_FMA | CPUID_TM)
           /* missing:
           CPUID_EXT_DTES64, CPUID_EXT_DSCPL, CPUID_EXT_VMX, CPUID_EXT_SMX,
           CPUID_EXT_EST, CPUID_EXT_TM2, CPUID_EXT_CID,
@@ -889,7 +889,8 @@ FeatureWordInfo feature_word_info[FEATURE_WORDS] = {
     [FEAT_8000_0007_EDX] = {
         .type = CPUID_FEATURE_WORD,
         .feat_names = {
-            NULL, NULL, NULL, NULL,
+            /* How should I implement CPU fan + temperature mocking? */
+            "temp-sensor", NULL, NULL, NULL,
             NULL, NULL, NULL, NULL,
             "invtsc", NULL, NULL, NULL,
             NULL, NULL, NULL, NULL,
@@ -900,7 +901,7 @@ FeatureWordInfo feature_word_info[FEATURE_WORDS] = {
         },
         .cpuid = { .eax = 0x80000007, .reg = R_EDX, },
         .tcg_features = TCG_APM_FEATURES,
-        .unmigratable_flags = CPUID_APM_INVTSC,
+        .unmigratable_flags = CPUID_APM_INVTSC | CPUID_APM_TEMP_SENSOR,
     },
     [FEAT_8000_0008_EBX] = {
         .type = CPUID_FEATURE_WORD,
@@ -968,7 +969,7 @@ FeatureWordInfo feature_word_info[FEATURE_WORDS] = {
     [FEAT_6_EAX] = {
         .type = CPUID_FEATURE_WORD,
         .feat_names = {
-            NULL, NULL, "arat", NULL,
+            "dts", NULL, "arat", NULL,
             NULL, NULL, NULL, NULL,
             NULL, NULL, NULL, NULL,
             NULL, NULL, NULL, NULL,
@@ -1892,16 +1893,17 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .family = 6,
         .model = 15,
         .stepping = 11,
-        /* Missing: CPUID_DTS, CPUID_HT, CPUID_TM, CPUID_PBE */
+        /* Missing: CPUID_DTS, CPUID_HT, CPUID_PBE */
         .features[FEAT_1_EDX] =
             PPRO_FEATURES |
             CPUID_MTRR | CPUID_CLFLUSH | CPUID_MCA |
-            CPUID_PSE36 | CPUID_VME | CPUID_ACPI | CPUID_SS,
+            CPUID_PSE36 | CPUID_VME | CPUID_ACPI | CPUID_SS |
+            CPUID_TM,
         /* Missing: CPUID_EXT_DTES64, CPUID_EXT_DSCPL, CPUID_EXT_EST,
-         * CPUID_EXT_TM2, CPUID_EXT_XTPR, CPUID_EXT_PDCM, CPUID_EXT_VMX */
+         * CPUID_EXT_XTPR, CPUID_EXT_PDCM, CPUID_EXT_VMX */
         .features[FEAT_1_ECX] =
             CPUID_EXT_SSE3 | CPUID_EXT_MONITOR | CPUID_EXT_SSSE3 |
-            CPUID_EXT_CX16,
+            CPUID_EXT_CX16 | CPUID_EXT_TM2,
         .features[FEAT_8000_0001_EDX] =
             CPUID_EXT2_LM | CPUID_EXT2_SYSCALL | CPUID_EXT2_NX,
         .features[FEAT_8000_0001_ECX] =
@@ -2019,11 +2021,11 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .family = 6,
         .model = 14,
         .stepping = 8,
-        /* Missing: CPUID_DTS, CPUID_HT, CPUID_TM, CPUID_PBE */
+        /* Missing: CPUID_DTS, CPUID_HT, CPUID_PBE */
         .features[FEAT_1_EDX] =
             PPRO_FEATURES | CPUID_VME |
             CPUID_MTRR | CPUID_CLFLUSH | CPUID_MCA | CPUID_ACPI |
-            CPUID_SS,
+            CPUID_SS | CPUID_TM,
         /* Missing: CPUID_EXT_EST, CPUID_EXT_TM2 , CPUID_EXT_XTPR,
          * CPUID_EXT_PDCM, CPUID_EXT_VMX */
         .features[FEAT_1_ECX] =
@@ -2115,11 +2117,11 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .family = 6,
         .model = 28,
         .stepping = 2,
-        /* Missing: CPUID_DTS, CPUID_HT, CPUID_TM, CPUID_PBE */
+        /* Missing: CPUID_DTS, CPUID_HT, CPUID_PBE */
         .features[FEAT_1_EDX] =
             PPRO_FEATURES |
             CPUID_MTRR | CPUID_CLFLUSH | CPUID_MCA | CPUID_VME |
-            CPUID_ACPI | CPUID_SS,
+            CPUID_ACPI | CPUID_SS | CPUID_TM,
             /* Some CPUs got no CPUID_SEP */
         /* Missing: CPUID_EXT_DSCPL, CPUID_EXT_EST, CPUID_EXT_TM2,
          * CPUID_EXT_XTPR */
@@ -2316,7 +2318,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .features[FEAT_8000_0001_ECX] =
             CPUID_EXT3_LAHF_LM,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
         .features[FEAT_VMX_ENTRY_CTLS] = VMX_VM_ENTRY_IA32E_MODE |
@@ -2402,7 +2404,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .features[FEAT_XSAVE] =
             CPUID_XSAVE_XSAVEOPT,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
         .features[FEAT_VMX_ENTRY_CTLS] = VMX_VM_ENTRY_IA32E_MODE |
@@ -2491,7 +2493,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .features[FEAT_XSAVE] =
             CPUID_XSAVE_XSAVEOPT,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
         .features[FEAT_VMX_ENTRY_CTLS] = VMX_VM_ENTRY_IA32E_MODE |
@@ -2586,7 +2588,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .features[FEAT_XSAVE] =
             CPUID_XSAVE_XSAVEOPT,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
         .features[FEAT_VMX_ENTRY_CTLS] = VMX_VM_ENTRY_IA32E_MODE |
@@ -2716,7 +2718,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .features[FEAT_XSAVE] =
             CPUID_XSAVE_XSAVEOPT,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
         .features[FEAT_VMX_ENTRY_CTLS] = VMX_VM_ENTRY_IA32E_MODE |
@@ -2842,7 +2844,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         /* Missing: Mode-based execute control (XS/XU), processor tracing, TSC scaling */
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
@@ -2966,7 +2968,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         /* Missing: Mode-based execute control (XS/XU), processor tracing, TSC scaling */
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
@@ -3105,7 +3107,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         /* Missing: Mode-based execute control (XS/XU), processor tracing, TSC scaling */
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
@@ -3246,7 +3248,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         /* Missing: Mode-based execute control (XS/XU), processor tracing, TSC scaling */
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
@@ -3359,7 +3361,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         /* Missing: Mode-based execute control (XS/XU), processor tracing, TSC scaling */
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
@@ -3502,7 +3504,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .features[FEAT_XSAVE] =
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC | CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_ARCH_CAPABILITIES] =
             MSR_ARCH_CAP_RDCL_NO | MSR_ARCH_CAP_SKIP_L1DFL_VMENTRY,
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
@@ -3586,13 +3588,13 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .stepping = 1,
         .features[FEAT_1_EDX] =
             /* missing: CPUID_PN CPUID_IA64 */
-            /* missing: CPUID_DTS, CPUID_HT, CPUID_TM, CPUID_PBE */
+            /* missing: CPUID_DTS, CPUID_HT, CPUID_PBE */
             CPUID_FP87 | CPUID_VME | CPUID_DE | CPUID_PSE |
             CPUID_TSC | CPUID_MSR | CPUID_PAE | CPUID_MCE |
             CPUID_CX8 | CPUID_APIC | CPUID_SEP |
             CPUID_MTRR | CPUID_PGE | CPUID_MCA | CPUID_CMOV |
             CPUID_PAT | CPUID_PSE36 | CPUID_CLFLUSH |
-            CPUID_MMX |
+            CPUID_MMX | CPUID_TM |
             CPUID_FXSR | CPUID_SSE | CPUID_SSE2,
         .features[FEAT_1_ECX] =
             CPUID_EXT_SSE3 | CPUID_EXT_PCLMULQDQ | CPUID_EXT_MONITOR |
@@ -3637,7 +3639,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_VMX_BASIC] = MSR_VMX_BASIC_INS_OUTS |
              MSR_VMX_BASIC_TRUE_CTLS,
         .features[FEAT_VMX_ENTRY_CTLS] = VMX_VM_ENTRY_IA32E_MODE |
@@ -3756,7 +3758,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
         .features[FEAT_XSAVE] =
             CPUID_XSAVE_XSAVEOPT,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .xlevel = 0x80000008,
         .model_id = "Intel Xeon Phi Processor (Knights Mill)",
     },
@@ -3928,7 +3930,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_SVM] =
             CPUID_SVM_NPT | CPUID_SVM_NRIPSAVE,
         .xlevel = 0x8000001E,
@@ -4001,7 +4003,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_SVM] =
             CPUID_SVM_NPT | CPUID_SVM_NRIPSAVE,
         .xlevel = 0x8000001E,
@@ -4062,7 +4064,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1 | CPUID_XSAVE_XSAVES,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_SVM] =
             CPUID_SVM_NPT | CPUID_SVM_NRIPSAVE,
         .xlevel = 0x8000001E,
@@ -4129,7 +4131,7 @@ static const X86CPUDefinition builtin_x86_defs[] = {
             CPUID_XSAVE_XSAVEOPT | CPUID_XSAVE_XSAVEC |
             CPUID_XSAVE_XGETBV1 | CPUID_XSAVE_XSAVES,
         .features[FEAT_6_EAX] =
-            CPUID_6_EAX_ARAT,
+            CPUID_6_EAX_ARAT | CPUID_6_EAX_THERMAL,
         .features[FEAT_SVM] =
             CPUID_SVM_NPT | CPUID_SVM_NRIPSAVE | CPUID_SVM_SVME_ADDR_CHK,
         .xlevel = 0x8000001E,
@@ -6230,9 +6232,7 @@ void x86_cpu_expand_features(X86CPU *cpu, Error **errp)
         }
     }
 
-    if (!kvm_enabled() || !cpu->expose_kvm) {
-        env->features[FEAT_KVM] = 0;
-    }
+    env->features[FEAT_KVM] = 0; /* No KVM features are exposed to the guest */
 
     x86_cpu_enable_xsave_components(cpu);
 
@@ -7037,7 +7037,7 @@ static Property x86_cpu_properties[] = {
     DEFINE_PROP_BOOL("check", X86CPU, check_cpuid, true),
     DEFINE_PROP_BOOL("enforce", X86CPU, enforce_cpuid, false),
     DEFINE_PROP_BOOL("x-force-features", X86CPU, force_features, false),
-    DEFINE_PROP_BOOL("kvm", X86CPU, expose_kvm, true),
+    DEFINE_PROP_BOOL("kvm", X86CPU, expose_kvm, false),
     DEFINE_PROP_UINT32("phys-bits", X86CPU, phys_bits, 0),
     DEFINE_PROP_BOOL("host-phys-bits", X86CPU, host_phys_bits, false),
     DEFINE_PROP_UINT8("host-phys-bits-limit", X86CPU, host_phys_bits_limit, 0),

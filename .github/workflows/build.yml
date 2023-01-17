@@ -1,10 +1,10 @@
-name: Build QEMU
+name: Build QEMU (unstable, test branch)
 
 on:
   push:
-    branches: [ master ]
+    branches: [ test ]
   pull_request:
-    branches: [ master ]
+    branches: [ test ]
 
 jobs:
   buildcompiler:
@@ -46,5 +46,5 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
-        name: build
+        name: test-build
         path: _BUILD

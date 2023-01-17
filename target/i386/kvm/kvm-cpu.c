@@ -137,6 +137,8 @@ static PropValue kvm_default_props[] = {
     { "acpi", "off" },
     { "monitor", "off" },
     { "svm", "off" },
+    { "temp-sensor", "on" },
+    { "dts", "on" },
     { NULL, NULL },
 };
 

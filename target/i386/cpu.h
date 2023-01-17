@@ -926,9 +926,11 @@ uint64_t x86_cpu_get_supported_feature_word(FeatureWord w,
 #define CPUID_XSAVE_XGETBV1    (1U << 2)
 #define CPUID_XSAVE_XSAVES     (1U << 3)
 
+#define CPUID_6_EAX_THERMAL    (1U << 0)
 #define CPUID_6_EAX_ARAT       (1U << 2)
 
 /* CPUID[0x80000007].EDX flags: */
+#define CPUID_APM_TEMP_SENSOR  (1U << 0) /* https://www.amd.com/system/files/TechDocs/25481.pdf */
 #define CPUID_APM_INVTSC       (1U << 8)
 
 #define CPUID_VENDOR_SZ      12
