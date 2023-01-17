@@ -827,15 +827,6 @@ static int kvm_arch_set_tsc_khz(CPUState *cs)
     return 0;
 }
 
-static bool tsc_is_stable_and_known(CPUX86State *env)
-{
-    if (!env->tsc_khz) {
-        return false;
-    }
-    return (env->features[FEAT_8000_0007_EDX] & CPUID_APM_INVTSC)
-        || env->user_tsc_khz;
-}
-
 #define DEFAULT_EVMCS_VERSION ((1 << 8) | 1)
 
 static struct {
@@ -1743,8 +1734,6 @@ int kvm_arch_init_vcpu(CPUState *cs)
     uint32_t limit, i, j, cpuid_i;
     uint32_t unused;
     struct kvm_cpuid_entry2 *c;
-    uint32_t signature[3];
-    int kvm_base = KVM_CPUID_SIGNATURE;
     int max_nested_state_len;
     int r;
     Error *local_err = NULL;
@@ -1796,7 +1785,6 @@ int kvm_arch_init_vcpu(CPUState *cs)
         }
 
         cpuid_i = hyperv_fill_cpuids(cs, cpuid_data.entries);
-        kvm_base = KVM_CPUID_SIGNATURE_NEXT;
         has_msr_hv_hypercall = true;
     }
 
